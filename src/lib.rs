@@ -10,7 +10,7 @@ use std::slice;
 use libc::*;
 use enum_primitive::FromPrimitive;
 
-use algo::Algorithm;
+pub use algo::Algorithm;
 
 pub trait Objective<T>
     : Fn(&[f64], &Option<&mut T>, bool) -> (f64, Option<Vec<f64>>) {
