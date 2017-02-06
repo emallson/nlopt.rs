@@ -2,8 +2,8 @@ extern crate libc;
 #[macro_use]
 extern crate enum_primitive;
 
-mod ffi;
-mod algo;
+pub mod ffi;
+pub mod algo;
 
 use std::slice;
 
@@ -113,17 +113,13 @@ pub enum ConstraintType {
 
 pub struct Problem {
     inst: *mut ffi::ProbInst,
-    vars: usize,
 }
 
 impl Problem {
     pub fn new(algo: Algorithm, n: usize) -> Problem {
         let inst = unsafe { ffi::nlopt_create(algo as c_int, n as c_uint) };
 
-        return Problem {
-            inst: inst,
-            vars: n,
-        };
+        return Problem { inst: inst };
     }
 
     pub fn set_objective<T, O: Objective<T>>(&mut self,
@@ -131,6 +127,7 @@ impl Problem {
                                              obj: O,
                                              initial: Option<&mut T>)
                                              -> Res {
+        // I expect that this leaks, but I haven't tested it.
         let obj_data = Box::new(ObjectiveWrapper(obj, initial));
         to_res(unsafe {
             match obj_type {
@@ -171,6 +168,7 @@ impl Problem {
                                               tolerance: f64)
                                               -> Res {
         use ConstraintType::*;
+        // I expect that this leaks, but I haven't tested it.
         let objdata = Box::new(ObjectiveWrapper(con, initial));
         to_res(unsafe {
             match ty {
