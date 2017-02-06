@@ -1,0 +1,12 @@
+[package]
+authors = ["J David Smith <emallson@archlinux.us>"]
+name = "nlopt"
+version = "0.1.0"
+
+
+[dependencies]
+libc = "0.2"
+enum_primitive = "0.1"
+
+[features]
+default = []
